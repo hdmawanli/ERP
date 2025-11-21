@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>编辑制种计划</h2>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="plan_code">计划编号</label>
+            <input type="text" class="form-control" id="plan_code" name="plan_code" value="{{ plan.plan_code }}" required>
+        </div>
+        <div class="form-group">
+            <label for="crop_type">作物类型</label>
+            <input type="text" class="form-control" id="crop_type" name="crop_type" value="{{ plan.crop_type }}" required>
+        </div>
+        <div class="form-group">
+            <label for="variety">品种</label>
+            <input type="text" class="form-control" id="variety" name="variety" value="{{ plan.variety }}" required>
+        </div>
+        <div class="form-group">
+            <label for="planned_area">计划面积</label>
+            <input type="number" step="0.01" class="form-control" id="planned_area" name="planned_area" value="{{ plan.planned_area }}" required>
+        </div>
+        <div class="form-group">
+            <label for="planned_yield">计划产量</label>
+            <input type="number" step="0.01" class="form-control" id="planned_yield" name="planned_yield" value="{{ plan.planned_yield }}" required>
+        </div>
+        <div class="form-group">
+            <label for="start_date">开始日期</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ plan.start_date.strftime('%Y-%m-%d') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">结束日期</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ plan.end_date.strftime('%Y-%m-%d') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="status">状态</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="1" {% if plan.status == 1 %}selected{% endif %}>未开始</option>
+                <option value="2" {% if plan.status == 2 %}selected{% endif %}>进行中</option>
+                <option value="3" {% if plan.status == 3 %}selected{% endif %}>已完成</option>
+                <option value="4" {% if plan.status == 4 %}selected{% endif %}>已取消</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('production.plan_list') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

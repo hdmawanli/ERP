@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}添加客户投诉{% endblock %}
+
+{% block content %}
+    <h2>添加客户投诉</h2>
+    <form action="{{ url_for('after_sales.add_complaint') }}" method="post">
+        <div>
+            <label for="customer_id">客户:</label>
+            <select name="customer_id" required>
+                {% for customer in customers %}
+                    <option value="{{ customer.customer_id }}">{{ customer.customer_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="batch_id">批次:</label>
+            <select name="batch_id" required>
+                {% for batch in batches %}
+                    <option value="{{ batch.batch_id }}">{{ batch.batch_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="problem_description">问题描述:</label>
+            <textarea name="problem_description" required></textarea>
+        </div>
+        <div>
+            <label for="complaint_type">投诉类型:</label>
+            <input type="text" name="complaint_type">
+        </div>
+        <div>
+            <button type="submit">添加</button>
+            <a href="{{ url_for('after_sales.complaint_list') }}">取消</a>
+        </div>
+    </form>
+{% endblock %}

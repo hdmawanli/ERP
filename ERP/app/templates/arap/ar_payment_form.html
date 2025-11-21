@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}添加收款{% endblock %}
+{% block content %}
+<h2>添加收款</h2>
+<form method="post">
+  <label>发票ID: <input name="invoice_id" required></label><br>
+  <label>金额: <input name="amount" type="number" step="0.01" required></label><br>
+  <label>收款日期: <input name="payment_date" type="date"></label><br>
+  <label>账户ID: <input name="account_id" value="1"></label><br>
+  <label>备注: <input name="reference"></label><br>
+  <button type="submit">提交</button>
+</form>
+{% endblock %}

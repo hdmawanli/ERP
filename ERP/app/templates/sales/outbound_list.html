@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}待出库订单{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-title">待出库订单</div>
+</div>
+<div class="container">
+    <table>
+      <thead><tr><th>ID</th><th>订单号</th><th>客户</th><th>操作</th></tr></thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ o.order_id }}</td>
+          <td>{{ o.order_no }}</td>
+          <td>{{ o.customer_id }}</td>
+          <td><a href="{{ url_for('sales.process_outbound', order_id=o.order_id) }}" class="btn btn-primary">处理出库</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4">没有记录</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

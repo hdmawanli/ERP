@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}添加应付发票{% endblock %}
+{% block content %}
+<h2>添加应付发票</h2>
+<form method="post">
+  <label>供应商ID: <input name="supplier_id" required></label><br>
+  <label>金额: <input name="amount" type="number" step="0.01" required></label><br>
+  <label>到期日: <input name="due_date" type="date"></label><br>
+  <label>说明: <input name="description"></label><br>
+  <button type="submit">提交</button>
+</form>
+{% endblock %}

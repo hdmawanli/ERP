@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}物料/商品列表{% endblock %}
+{% block content %}
+<h2>物料/商品列表</h2>
+<a href="{{ url_for('inventory.add_item') }}">添加库存商品</a><br><br>
+<table>
+  <thead><tr><th>ID</th><th>编码</th><th>名称</th><th>分类</th><th>单位</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for it in items %}
+    <tr>
+      <td>{{ it.product_id if it.product_id else it.material_id }}</td>
+      <td>{{ it.product_code if it.product_code else it.material_code }}</td>
+      <td>{{ it.product_name if it.product_name else it.material_name }}</td>
+      <td>{{ it.category.category_name }}</td>
+      <td>{{ it.unit.unit_name }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

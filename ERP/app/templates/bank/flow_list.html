@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>银行流水记录</h2>
+            </div>
+            <div class="col-md-6 text-right">
+                <a href="{{ url_for('bank.add_flow') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> 添加银行流水
+                </a>
+            </div>
+        </div>
+
+        <!-- 筛选表单 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('bank.flows') }}">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="account_id">银行账户</label>
+                            <select class="form-control" id="account_id" name="account_id">
+                                <option value="">所有账户</option>
+                                {% for account in accounts %}
+                                    <option value="{{ account.account_id }}" {% if account.account_id == request.args.get('account_id', '')|int %}selected{% endif %}>
+                                        {{ account.account_name }} ({{ account.bank_name }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="start_date">开始日期</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request.args.get('start_date') }}">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="end_date">结束日期</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request.args.get('end_date') }}">
+                        </div>
+                        <div class="form-group col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary btn-block">筛选</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 流水记录表格 -->
+        <div class="card">
+            <div class="card-body p-0">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>账户名称</th>
+                            <th>银行名称</th>
+                            <th>交易日期</th>
+                            <th>交易类型</th>
+                            <th>金额</th>
+                            <th>摘要</th>
+                            <th>余额</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if flows %}<!-- Existing flow data -->
+                            {% for flow in flows %}
+                                <tr>
+                                    <td>{{ flow.flow_id }}</td>
+                                    <td>{{ flow.account.account_name }}</td>
+                                    <td>{{ flow.account.bank_name }}</td>
+                                    <td>{{ flow.flow_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if flow.type == 1 %}
+                                            <span class="badge badge-success">收入</span>
+                                        {% elif flow.type == 2 %}
+                                            <span class="badge badge-danger">支出</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">未知</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ flow.amount }}</td>
+                                    <td>{{ flow.summary }}</td>
+                                    <td>{{ flow.balance }}</td>
+                                    <td>{{ flow.create_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('bank.edit_flow', flow_id=flow.flow_id) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ url_for('bank.delete_flow', flow_id=flow.flow_id) }}" class="btn btn-sm btn-danger ml-1">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="10" class="text-center py-4">
+                                    <i class="fas fa-inbox fa-5x text-muted mb-3"></i>
+                                    <br>
+                                    暂无银行流水记录
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

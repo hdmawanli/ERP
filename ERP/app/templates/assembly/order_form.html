@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">
+  <div class="form-group">
+    <label for="order_no">订单号:</label>
+    <input type="text" id="order_no" name="order_no" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="finished_goods_id">成品:</label>
+    <select id="finished_goods_id" name="finished_goods_id" class="form-control" required>
+      {% for product in finished_goods %}
+        <option value="{{ product.product_id }}">{{ product.product_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="production_date">生产日期:</label>
+    <input type="date" id="production_date" name="production_date" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="quantity_produced">生产数量:</label>
+    <input type="number" id="quantity_produced" name="quantity_produced" class="form-control" step="0.01" min="0" required>
+  </div>
+  <div class="form-group">
+    <label for="warehouse_id">仓库:</label>
+    <input type="number" id="warehouse_id" name="warehouse_id" class="form-control" min="1" value="1">
+  </div>
+  
+  <h3>原材料明细</h3>
+  <div id="raw-materials-list">
+    <!-- 原材料列表，这里可以添加动态添加行的JavaScript -->
+    <div class="raw-material-row">
+      <div class="form-group">
+        <label for="raw_item_id_0">原材料:</label>
+        <select id="raw_item_id_0" name="raw_item_id[]" class="form-control raw-item-select" required>
+          {% for material in raw_materials %}
+            <option value="{{ material.material_id }}">{{ material.material_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="raw_quantity_0">用量:</label>
+        <input type="number" id="raw_quantity_0" name="raw_quantity[]" class="form-control raw-quantity" step="0.01" min="0" required>
+      </div>
+      <button type="button" class="btn btn-danger remove-raw-material">移除</button>
+    </div>
+  </div>
+  <button type="button" id="add-raw-material" class="btn btn-success">添加原材料</button>
+  <br><br>
+  
+  <button type="submit" class="btn btn-primary">提交</button>
+  <a href="{{ url_for('assembly.index') }}" class="btn btn-secondary">取消</a>
+</form>
+
+<script>
+// 简单的动态添加/移除原材料行的JavaScript
+let rowCount = 1;
+
+document.getElementById('add-raw-material').addEventListener('click', function() {
+  const rawMaterialsList = document.getElementById('raw-materials-list');
+  const newRow = document.createElement('div');
+  newRow.className = 'raw-material-row';
+  newRow.innerHTML = `
+    <div class="form-group">
+      <label for="raw_item_id_${rowCount}">原材料:</label>
+      <select id="raw_item_id_${rowCount}" name="raw_item_id[]" class="form-control raw-item-select" required>
+        {% for material in raw_materials %}
+          <option value="{{ material.material_id }}">{{ material.material_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="raw_quantity_${rowCount}">用量:</label>
+      <input type="number" id="raw_quantity_${rowCount}" name="raw_quantity[]" class="form-control raw-quantity" step="0.01" min="0" required>
+    </div>
+    <button type="button" class="btn btn-danger remove-raw-material">移除</button>
+  `;
+  rawMaterialsList.appendChild(newRow);
+  rowCount++;
+});
+
+document.body.addEventListener('click', function(e) {
+  if (e.target.classList.contains('remove-raw-material')) {
+    const row = e.target.parentElement;
+    const rows = document.querySelectorAll('.raw-material-row');
+    if (rows.length > 1) {
+      row.remove();
+    }
+  }
+});
+</script>
+{% endblock %}

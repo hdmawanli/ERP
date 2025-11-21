@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>质量检测详情</h2>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">检测基本信息</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>批次号:</strong> {{ test.seed_batch.batch_number }}
+                </div>
+                <div class="col-md-3">
+                    <strong>产品名称:</strong> {{ test.seed_batch.product.product_name }}
+                </div>
+                <div class="col-md-3">
+                    <strong>检测类型:</strong> {{ test.test_type }}
+                </div>
+                <div class="col-md-3">
+                    <strong>操作员:</strong> {{ test.operator }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <strong>检测时间:</strong> {{ test.test_date.strftime('%Y-%m-%d %H:%M:%S') if test.test_date else '未设置' }}
+                </div>
+                <div class="col-md-3">
+                    <strong>整体结果:</strong>
+                    <span {% if test.overall_result == '合格' %}style="color: green; font-weight: bold;"{% else %}style="color: red; font-weight: bold;"{% endif %}>
+                        {{ test.overall_result }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>检测项目</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>项目名称</th>
+                <th>检测值</th>
+                <th>单位</th>
+                <th>标准值</th>
+                <th>结果</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in test.test_items %}
+            <tr>
+                <td>{{ item.test_item_name }}</td>
+                <td>{{ item.test_value }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ item.standard_value }}</td>
+                <td>
+                    {% if item.is_qualified %}
+                    <span style="color: green;">合格</span>
+                    {% else %}
+                    <span style="color: red;">不合格</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('quality_control.test_report', test_id=test.test_id) }}" class="btn btn-secondary">生成检测报告</a>
+    <a href="{{ url_for('quality_control.index') }}" class="btn btn-secondary">返回列表</a>
+</div>
+{% endblock %}

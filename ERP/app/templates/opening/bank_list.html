@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}银行期初余额列表{% endblock %}
+{% block content %}
+<h2>银行期初余额列表</h2>
+<table>
+  <thead><tr><th>ID</th><th>账户名称</th><th>银行名称</th><th>账户号码</th><th>余额</th><th>期初日期</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for balance in balances %}
+    <tr>
+      <td>{{ balance.id }}</td>
+      <td>{{ balance.account_name }}</td>
+      <td>{{ balance.bank_name }}</td>
+      <td>{{ balance.account_number }}</td>
+      <td>{{ balance.balance }}</td>
+      <td>{{ balance.opening_date }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('opening.add_bank_opening') }}">添加银行期初余额</a>
+{% endblock %}

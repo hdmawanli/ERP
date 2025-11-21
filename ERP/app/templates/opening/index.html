@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>期初管理</title>
+    <style>
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>期初管理</h1>
+    
+    <div class="nav-menu">
+        <a href="{{ url_for('opening.bank_opening') }}" class="nav-button">银行期初余额</a>
+        <a href="{{ url_for('opening.ar_opening') }}" class="nav-button">应收期初余额</a>
+        <a href="{{ url_for('opening.ap_opening') }}" class="nav-button">应付期初余额</a>
+        <a href="{{ url_for('opening.inventory_opening') }}" class="nav-button">库存期初余额</a>
+    </div>
+    
+    <!-- 这里可以添加期初数据统计信息 -->
+</body>
+</html>

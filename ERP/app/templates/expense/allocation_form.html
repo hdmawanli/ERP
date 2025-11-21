@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+  <label for="entry_id">费用记录:</label>
+  <select id="entry_id" name="entry_id" required>
+    {% for entry in entries %}
+    <option value="{{ entry.expense_id }}" {% if allocation and allocation.entry_id == entry.expense_id %}selected{% endif %}>{{ entry.expense_date }} - {{ entry.description }}</option>
+    {% endfor %}
+  </select><br>
+  <label for="allocation_date">分摊日期:</label>
+  <input type="date" id="allocation_date" name="allocation_date" value="{{ allocation.allocation_date if allocation else '' }}" required><br>
+  <label for="cost_center">成本中心:</label>
+  <input type="text" id="cost_center" name="cost_center" value="{{ allocation.cost_center if allocation else '' }}" required><br>
+  <label for="allocated_amount">分摊金额:</label>
+  <input type="number" id="allocated_amount" name="allocated_amount" step="0.01" value="{{ allocation.allocated_amount if allocation else '' }}" required><br>
+  <label for="description">描述:</label>
+  <textarea id="description" name="description" rows="3">{{ allocation.description if allocation else '' }}</textarea><br>
+  <button type="submit">保存</button>
+  <a href="{{ url_for('expense.allocations') }}">取消</a>
+</form>
+{% endblock %}

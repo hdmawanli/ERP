@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}制种计划列表{% endblock %}
+{% block content %}
+<h2>制种计划列表</h2>
+<a href="{{ url_for('production.add_plan') }}">添加新计划</a><br><br>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>计划编号</th>
+      <th>作物类型</th>
+      <th>品种</th>
+      <th>计划面积</th>
+      <th>计划产量</th>
+      <th>开始日期</th>
+      <th>结束日期</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for plan in plans %}
+    <tr>
+      <td>{{ plan.plan_id }}</td>
+      <td>{{ plan.plan_code }}</td>
+      <td>{{ plan.crop_type }}</td>
+      <td>{{ plan.variety }}</td>
+      <td>{{ plan.planned_area }}</td>
+      <td>{{ plan.planned_yield }}</td>
+      <td>{{ plan.start_date.strftime('%Y-%m-%d') }}</td>
+      <td>{{ plan.end_date.strftime('%Y-%m-%d') }}</td>
+      <td>
+        {% if plan.status == '1' %}
+        <span style="color: blue;">未开始</span>
+        {% elif plan.status == '2' %}
+        <span style="color: green;">进行中</span>
+        {% elif plan.status == '3' %}
+        <span style="color: gray;">已完成</span>
+        {% elif plan.status == '4' %}
+        <span style="color: red;">已取消</span>
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('production.edit_plan', plan_id=plan.plan_id) }}">编辑</a> |
+        <form method="POST" action="{{ url_for('production.delete_plan', plan_id=plan.plan_id) }}" style="display: inline;">
+          <input type="submit" value="删除" onclick="return confirm('确定要删除这个制种计划吗？')">
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="10">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

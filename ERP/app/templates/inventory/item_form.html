@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ title }}</h2>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="item_code">商品编码</label>
+            <input type="text" class="form-control" id="item_code" name="item_code" {% if item %}value="{{ item.item_code }}"{% endif %} required>
+        </div>
+        <div class="form-group">
+            <label for="item_name">商品名称</label>
+            <input type="text" class="form-control" id="item_name" name="item_name" {% if item %}value="{{ item.product_name }}"{% endif %} required>
+        </div>
+        <div class="form-group">
+            <label for="category_id">商品分类</label>
+            <select class="form-control" id="category_id" name="category_id" required>
+                {% for category in categories %}
+                <option value="{{ category.category_id }}" {% if item and item.category_id == category.category_id %}selected{% endif %}>{{ category.category_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="unit_id">单位</label>
+            <select class="form-control" id="unit_id" name="unit_id" required>
+                {% for unit in units %}
+                <option value="{{ unit.unit_id }}" {% if item and item.unit_id == unit.unit_id %}selected{% endif %}>{{ unit.unit_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="purchase_price">采购单价</label>
+            <input type="number" step="0.01" class="form-control" id="purchase_price" name="purchase_price" {% if item %}value="{{ item.purchase_price }}"{% endif %} required>
+        </div>
+        <div class="form-group">
+            <label for="sale_price">销售单价</label>
+            <input type="number" step="0.01" class="form-control" id="sale_price" name="sale_price" {% if item %}value="{{ item.sale_price }}"{% endif %} required>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('inventory.index') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

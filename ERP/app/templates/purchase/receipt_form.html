@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">
+  <div class="form-group">
+    <label for="order_id">采购订单:</label>
+    <select id="order_id" name="order_id" class="form-control" required>
+      {% for order in pending_orders %}
+        <option value="{{ order.order_id }}">{{ order.order_no }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="receipt_date">收货日期:</label>
+    <input type="date" id="receipt_date" name="receipt_date" class="form-control" required>
+  </div>
+  
+  <h3>采购明细</h3>
+  <table id="order-details" class="table">
+    <thead>
+      <tr>
+        <th>原材料</th>
+        <th>单位</th>
+        <th>数量</th>
+        <th>单价</th>
+        <th>金额</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 订单明细将通过AJAX填充 -->
+    </tbody>
+  </table>
+  
+  <button type="submit" class="btn btn-primary">提交</button>
+  <a href="{{ url_for('purchase.index') }}" class="btn btn-secondary">取消</a>
+</form>
+
+<script>
+// 当选择不同的采购订单时，通过AJAX获取订单明细
+const orderSelect = document.getElementById('order_id');
+const orderDetailsTable = document.getElementById('order-details');
+const tbody = orderDetailsTable.querySelector('tbody');
+
+orderSelect.addEventListener('change', async function() {
+  const orderId = this.value;
+  if (!orderId) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">请选择采购订单</td></tr>';
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/purchase/order/${orderId}/details`);
+    const details = await response.json();
+    
+    if (details.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center">该订单没有明细</td></tr>';
+      return;
+    }
+    
+    // 填充订单明细
+    let html = '';
+    for (const detail of details) {
+      html += `
+        <tr>
+          <td>${detail.item_name}</td>
+          <td>${detail.unit}</td>
+          <td>${detail.quantity}</td>
+          <td>${detail.unit_price}</td>
+          <td>${detail.amount}</td>
+        </tr>
+      `;
+    }
+    tbody.innerHTML = html;
+  } catch (error) {
+    console.error('获取订单明细失败:', error);
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">获取订单明细失败</td></tr>';
+  }
+});
+
+// 初始化页面，显示第一个订单的明细
+if (orderSelect.options.length > 0) {
+  orderSelect.dispatchEvent(new Event('change'));
+}
+</script>
+{% endblock %}

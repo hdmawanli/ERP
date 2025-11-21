@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}银行账户列表{% endblock %}
+{% block content %}
+<h2>银行账户列表</h2>
+<a href="{{ url_for('bank.add_account') }}">添加银行账户</a><br><br>
+<table>
+  <thead><tr><th>ID</th><th>账户名称</th><th>银行名称</th><th>账户号码</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for account in accounts %}
+    <tr>
+      <td>{{ account.account_id }}</td>
+      <td>{{ account.account_name }}</td>
+      <td>{{ account.bank_name }}</td>
+      <td>{{ account.account_number }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

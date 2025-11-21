@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}编辑客户投诉{% endblock %}
+
+{% block content %}
+    <h2>编辑客户投诉</h2>
+    <form action="{{ url_for('after_sales.edit_complaint', complaint_id=complaint.complaint_id) }}" method="post">
+        <div>
+            <label for="customer_id">客户:</label>
+            <select name="customer_id" required>
+                {% for customer in customers %}
+                    <option value="{{ customer.customer_id }}" {% if customer.customer_id == complaint.customer_id %} selected {% endif %}>{{ customer.customer_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="batch_id">批次:</label>
+            <select name="batch_id" required>
+                {% for batch in batches %}
+                    <option value="{{ batch.batch_id }}" {% if batch.batch_id == complaint.batch_id %} selected {% endif %}>{{ batch.batch_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="problem_description">问题描述:</label>
+            <textarea name="problem_description" required>{{ complaint.problem_description }}</textarea>
+        </div>
+        <div>
+            <label for="complaint_type">投诉类型:</label>
+            <input type="text" name="complaint_type" value="{{ complaint.complaint_type or '' }}">
+        </div>
+        <div>
+            <label for="status">状态:</label>
+            <select name="status" required>
+                <option value="0" {% if complaint.status == 0 %} selected {% endif %}>未处理</option>
+                <option value="1" {% if complaint.status == 1 %} selected {% endif %}>已处理</option>
+                <option value="2" {% if complaint.status == 2 %} selected {% endif %}>已关闭</option>
+            </select>
+        </div>
+        <div>
+            <label for="solution">解决方案:</label>
+            <textarea name="solution">{{ complaint.solution or '' }}</textarea>
+        </div>
+        <div>
+            <label for="processed_by">处理人:</label>
+            <select name="processed_by">
+                <option value="" {% if not complaint.processed_by %} selected {% endif %}>未处理</option>
+                {% for user in users %}
+                    <option value="{{ user.user_id }}" {% if user.user_id == complaint.processed_by %} selected {% endif %}>{{ user.real_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button type="submit">保存</button>
+            <a href="{{ url_for('after_sales.complaint_list') }}">取消</a>
+        </div>
+    </form>
+{% endblock %}

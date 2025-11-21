@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}客户投诉详情{% endblock %}
+
+{% block content %}
+    <h2>客户投诉详情</h2>
+    <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <h3>投诉信息</h3>
+        <div>投诉ID: {{ complaint.complaint_id }}</div>
+        <div>客户: {{ complaint.customer.customer_name }}</div>
+        <div>批次号: {{ complaint.batch.batch_number }}</div>
+        <div>投诉日期: {{ complaint.complaint_date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+        <div>问题描述: {{ complaint.problem_description }}</div>
+        <div>投诉类型: {{ complaint.complaint_type or '无' }}</div>
+        <div>状态: 
+            {% if complaint.status == 0 %}未处理{% elif complaint.status == 1 %}已处理{% else %}已关闭{% endif %}
+        </div>
+        <div>解决方案: {{ complaint.solution or '无' }}</div>
+        <div>处理人: {{ complaint.processor.real_name if complaint.processor else '未处理' }}</div>
+        <div>处理日期: {{ complaint.processed_date.strftime('%Y-%m-%d %H:%M:%S') if complaint.processed_date else '未处理' }}</div>
+    </div>
+
+    <h3>投诉回复</h3>
+    <div style="margin-bottom: 20px;">
+        {% for reply in replies %}
+        <div style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px;">
+            <div>回复人: {{ reply.user.real_name }}</div>
+            <div>回复日期: {{ reply.reply_date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+            <div>回复内容: {{ reply.reply_content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3>添加回复</h3>
+    <form action="{{ url_for('after_sales.add_complaint_reply', complaint_id=complaint.complaint_id) }}" method="post">
+        <div>
+            <label for="reply_content">回复内容:</label><br>
+            <textarea name="reply_content" rows="5" cols="80" required></textarea>
+        </div>
+        <!-- 通常从登录用户获取user_id，这里为了演示添加了隐藏字段 -->
+        <input type="hidden" name="user_id" value="{{ complaint.created_by }}">
+        <div>
+            <button type="submit">添加回复</button>
+            <a href="{{ url_for('after_sales.complaint_list') }}">返回列表</a>
+        </div>
+    </form>
+{% endblock %}

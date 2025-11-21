@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        /* 全局样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: all 0.3s;
+        }
+        
+        .container:hover {
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        /* 左侧导航栏 */
+        .nav-sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            height: calc(100vh - 60px);
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            overflow-y: visible;
+        }
+        
+        .nav-sidebar a {
+            display: block;
+            padding: 12px 25px;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-sidebar a:hover {
+            background-color: #34495e;
+            border-left-color: #3498db;
+            transform: translateX(5px);
+        }
+        
+        .nav-sidebar a.active {
+            background-color: #34495e;
+            border-left-color: #3498db;
+        }
+        
+        /* 导航分隔线 */
+        .nav-divider {
+            height: 1px;
+            background-color: #34495e;
+            margin: 15px 20px;
+        }
+        
+        /* 侧边栏标题 */
+        .sidebar-header {
+            padding: 0 25px 15px;
+        }
+        
+        .sidebar-title {
+            color: #ecf0f1;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            background-color: #34495e;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            z-index: 9999;
+        }
+
+        /* .dropdown:hover .dropdown-content {
+            display: block;
+        } */
+        
+        /* JavaScript下拉菜单支持 */
+        .dropdown-toggle { /* 用于JavaScript点击事件 */
+            cursor: pointer;
+        }
+
+        .dropdown-content a {
+            padding: 12px 25px;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            border-left: 3px solid transparent;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #34495e;
+            border-left-color: #3498db;
+            transform: translateX(5px);
+        }
+
+        .dropdown-content a.active {
+            background-color: #34495e;
+            border-left-color: #3498db;
+        }
+        
+        /* 应用容器 */
+        .app-container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 240px; /* 导航栏宽度 + 间距 */
+            min-height: calc(100vh - 40px);
+        }
+        
+        /* 页面头部 */
+        .page-header {
+            margin-bottom: 25px;
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #34495e;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        table th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        
+        table tbody tr:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* 表格状态指示器 */
+        .status-cancelled {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background-color: #f39c12;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-approved {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background-color: #27ae60;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-completed {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background-color: #3498db;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-unknown {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background-color: #95a5a6;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        /* 查询表单 */
+        .query-form {
+            margin: 20px 0;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: flex-end;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .query-form .form-group {
+            margin: 0;
+        }
+        
+        .query-form .btn {
+            margin-top: 22px;
+        }
+        
+        /* 信息提示 */
+        .flash-message {
+            margin: 25px 0;
+            padding: 18px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* 分页样式 */
+        .pagination {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .pagination a {
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #3498db;
+            background-color: white;
+            border: 1px solid #3498db;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .pagination a:hover, .pagination a.active {
+            background-color: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        {% if current_user.is_authenticated %}
+        <div class="nav-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">ERP系统</h2>
+            </div>
+            <div class="nav-divider"></div>
+            <a href="{{ url_for('main.index') }}">首页</a>
+            <a href="{{ url_for('sales.index') }}">销售管理</a>
+            <a href="{{ url_for('purchase.index') }}">采购管理</a>
+            <a href="{{ url_for('inventory.index') }}">库存管理</a>
+            <a href="{{ url_for('after_sales.complaint_list') }}">售后服务</a>
+            <a href="{{ url_for('assembly.index') }}">组装管理</a>
+            <a href="{{ url_for('bank.index') }}">银行管理</a>
+            <a href="{{ url_for('expense.index') }}">费用管理</a>
+            <div class="dropdown">
+                <a href="{{ url_for('opening.index') }}" class="dropdown-toggle">期初管理</a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('opening.index') }}">期初管理首页</a>
+                    <a href="{{ url_for('opening.bank_opening') }}">银行期初余额</a>
+                    <a href="{{ url_for('opening.ar_opening') }}">应收期初余额</a>
+                    <a href="{{ url_for('opening.ap_opening') }}">应付期初余额</a>
+                    <a href="{{ url_for('opening.inventory_opening') }}">库存期初余额</a>
+                </div>
+            </div>
+            <a href="{{ url_for('quality_control.index') }}">质量控制</a>
+            <a href="{{ url_for('seed_batch.index') }}">种子批次管理</a>
+            <div class="dropdown">
+                <a href="{{ url_for('master_data.product_list') }}" class="dropdown-toggle">主数据管理</a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('master_data.product_list') }}">商品管理</a>
+                    <a href="{{ url_for('master_data.specification_list') }}">规格管理</a>
+                    <a href="{{ url_for('master_data.brand_list') }}">品牌管理</a>
+                    <a href="{{ url_for('master_data.unit_list') }}">单位管理</a>
+                    <a href="{{ url_for('arap.suppliers') }}">供应商管理</a>
+                    <a href="{{ url_for('arap.customers') }}">客户管理</a>
+                </div>
+            </div>
+            <a href="{{ url_for('main.dashboard') }}">仪表盘</a>
+            <div class="nav-divider"></div>
+            <a href="{{ url_for('auth.logout') }}">退出登录</a>
+        </div>
+        {% endif %}
+        <div class="main-content">
+            <div class="container">
+                <div class="page-header">
+                <h1 class="page-title">{% block page_title %}{{ self.title() }}{% endblock %}</h1>
+            </div>
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 下拉菜单点击事件支持
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const dropdownContent = this.nextElementSibling;
+                    // 关闭其他所有下拉菜单
+                    document.querySelectorAll('.dropdown-content').forEach(content => {
+                        if (content !== dropdownContent) {
+                            content.style.display = 'none';
+                        }
+                    });
+                    // 切换当前下拉菜单
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+
+            // 点击页面其他地方关闭下拉菜单
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

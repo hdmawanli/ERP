@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}采购订单详情{% endblock %}
+{% block content %}
+<h2>采购订单 #{{ order.order_no }}</h2>
+<p>供应商：{{ supplier.supplier_name if supplier else order.supplier_id }}</p>
+<p>下单日期：{{ order.order_date }}</p>
+<p>预计到货日期：{{ order.expected_date }}</p>
+<p>状态：{{ '待收货' if order.status == 1 else '已收货' if order.status == 2 else '未知' }}</p>
+<h3>采购明细</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>原材料</th>
+      <th>数量</th>
+      <th>单价</th>
+      <th>金额</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for detail in details %}
+    <tr>
+      <td>{{ detail.material.material_name }}</td>
+      <td>{{ detail.quantity }}</td>
+      <td>{{ detail.price }}</td>
+      <td>{{ detail.amount }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4" class="text-center">无明细</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('purchase.index') }}" class="btn btn-secondary">返回</a>
+{% endblock %}

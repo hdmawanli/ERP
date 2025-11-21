@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}销售订单详情{% endblock %}
+{% block content %}
+<h2>销售订单 #{{ order.order_no }}</h2>
+<p>客户：{{ customer.customer_id if customer else order.customer_id }}</p>
+<p>下单日期：{{ order.order_date }}</p>
+<h3>明细</h3>
+<ul>
+  {% for d in details %}
+  <li>{{ d.product_id }} - 数量：{{ d.quantity }} - 单价：{{ d.price }} - 小计：{{ d.amount }}</li>
+  {% else %}
+  <li>无明细</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}客户表单{% endblock %}
+{% block content %}
+<h2>客户表单</h2>
+<form method="post">
+  <label>客户代码: <input name="customer_code" required></label><br>
+  <label>客户名称: <input name="customer_name" required></label><br>
+  <label>联系人: <input name="contact_person"></label><br>
+  <label>电话: <input name="phone"></label><br>
+  <label>地址: <input name="address"></label><br>
+  <button type="submit">提交</button>
+</form>
+{% endblock %}

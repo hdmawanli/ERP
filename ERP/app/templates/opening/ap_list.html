@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}应付期初余额列表{% endblock %}
+{% block content %}
+<h2>应付期初余额列表</h2>
+<table>
+  <thead><tr><th>ID</th><th>供应商名称</th><th>金额</th><th>到期日期</th><th>期初日期</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for balance in balances %}
+    <tr>
+      <td>{{ balance.id }}</td>
+      <td>{{ balance.supplier_name }}</td>
+      <td>{{ balance.amount }}</td>
+      <td>{{ balance.due_date }}</td>
+      <td>{{ balance.opening_date }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('opening.add_ap_opening') }}">添加应付期初余额</a>
+{% endblock %}

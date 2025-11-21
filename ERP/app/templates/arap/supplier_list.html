@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}供应商列表{% endblock %}
+{% block content %}
+<h2>供应商列表</h2>
+<a href="{{ url_for('arap.add_supplier') }}">添加供应商</a>
+<table>
+  <thead><tr><th>ID</th><th>代码</th><th>名称</th><th>电话</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for s in suppliers %}
+    <tr>
+      <td>{{ s.supplier_id }}</td>
+      <td>{{ s.supplier_code }}</td>
+      <td>{{ s.supplier_name }}</td>
+      <td>{{ s.phone }}</td>
+      <td><a href="{{ url_for('arap.edit_supplier', supplier_id=s.supplier_id) }}">编辑</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

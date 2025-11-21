@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}添加销售订单{% endblock %}
+{% block content %}
+<h2>添加销售订单</h2>
+<form method="post">
+  <label>客户ID: <input name="customer_id" required></label><br>
+  <label>订单号: <input name="order_no"></label><br>
+  <label>订单日期: <input name="order_date" type="date" value="{{ today_date }}"></label><br>
+  <label>仓库ID: <input name="warehouse_id" value="1"></label><br>
+  <h3>订单明细</h3>
+  <table id="order-details">
+    <tr>
+      <th>商品</th>
+      <th>数量</th>
+      <th>单价</th>
+      <th>金额</th>
+      <th>操作</th>
+    </tr>
+    <tr class="detail-row">
+      <td>
+        <select name="item_id[]" required class="product-select">
+          <option value="">选择商品</option>
+          {% for item in inventory_items %}
+          <option value="{{ item.product_id }}" data-unit-price="{{ item.sale_price }}">
+            {{ item.product_name }} ({{ item.sale_price }})
+          </option>
+          {% endfor %}
+        </select>
+      </td>
+      <td><input type="number" name="quantity[]" min="0.01" step="0.01" required class="quantity-input"></td>
+      <td><input type="number" name="unit_price[]" step="0.01" required class="unit-price-input"></td>
+      <td><input type="number" name="amount[]" step="0.01" readonly class="amount-input"></td>
+      <td><button type="button" class="remove-row">删除</button></td>
+    </tr>
+  </table>
+  <button type="button" id="add-row">添加行</button>
+  <button type="submit">提交</button>
+</form>
+<script>
+    // 设置默认日期为今天
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('input[name="order_date"]').value = today;
+    });
+    // 商品选择后自动填充单价
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('product-select')) {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const unitPrice = selectedOption.getAttribute('data-unit-price');
+            const unitPriceInput = e.target.closest('.detail-row').querySelector('.unit-price-input');
+            unitPriceInput.value = unitPrice;
+            // 自动计算金额
+            calculateAmount(e.target.closest('.detail-row'));
+        }
+    });
+    // 数量或单价变化时自动计算金额
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('quantity-input') || e.target.classList.contains('unit-price-input')) {
+            calculateAmount(e.target.closest('.detail-row'));
+        }
+    });
+    // 计算金额
+    function calculateAmount(row) {
+        const quantity = parseFloat(row.querySelector('.quantity-input').value || '0');
+        const unitPrice = parseFloat(row.querySelector('.unit-price-input').value || '0');
+        const amount = (quantity * unitPrice).toFixed(2);
+        row.querySelector('.amount-input').value = amount;
+    }
+    // 添加行
+    document.getElementById('add-row').addEventListener('click', function() {
+        const table = document.getElementById('order-details');
+        const lastRow = table.querySelector('.detail-row:last-child');
+        const newRow = lastRow.cloneNode(true);
+        // 清空新行的输入值
+        newRow.querySelector('.product-select').value = '';
+        newRow.querySelector('.quantity-input').value = '';
+        newRow.querySelector('.unit-price-input').value = '';
+        newRow.querySelector('.amount-input').value = '';
+        table.appendChild(newRow);
+    });
+    // 删除行
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-row')) {
+            const rows = document.querySelectorAll('.detail-row');
+            if (rows.length > 1) {
+                e.target.closest('.detail-row').remove();
+            }
+        }
+    });
+</script>
+{% endblock %}

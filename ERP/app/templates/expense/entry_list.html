@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}费用记录列表{% endblock %}
+{% block content %}
+<h2>费用记录列表</h2>
+<table>
+  <thead><tr><th>ID</th><th>日期</th><th>类型</th><th>科目</th><th>金额</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for entry in entries %}
+    <tr>
+      <td>{{ entry.expense_id }}</td>
+      <td>{{ entry.expense_date.strftime('%Y-%m-%d') }}</td>
+      <td>{{ entry.expense_type.type_name }}</td><td>{{ entry.subject.subject_name }}</td>
+      <td>{{ entry.amount }}</td>
+      <td>{{ '已审批' if entry.status == 1 else '待审批' }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('expense.add_entry') }}">添加费用记录</a>
+{% endblock %}

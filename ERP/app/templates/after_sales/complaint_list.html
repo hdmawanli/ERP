@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}客户投诉列表{% endblock %}
+
+{% block content %}
+    <h2>客户投诉列表</h2>
+    <a href="{{ url_for('after_sales.add_complaint') }}" class="nav-button">添加客户投诉</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>投诉ID</th>
+                <th>客户</th>
+                <th>批次号</th>
+                <th>投诉日期</th>
+                <th>问题描述</th>
+                <th>投诉类型</th>
+                <th>状态</th>
+                <th>处理人</th>
+                <th>处理日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complaint in complaints %}
+            <tr>
+                <td>{{ complaint.complaint_id }}</td>
+                <td>{{ complaint.customer.customer_name }}</td>
+                <td>{{ complaint.batch.batch_number }}</td>
+                <td>{{ complaint.complaint_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ complaint.problem_description[:50] }}...</td>
+                <td>{{ complaint.complaint_type or '无' }}</td>
+                <td>
+                    {% if complaint.status == 0 %}
+                        未处理
+                    {% elif complaint.status == 1 %}
+                        已处理
+                    {% elif complaint.status == 2 %}
+                        已关闭
+                    {% else %}
+                        未知
+                    {% endif %}
+                </td>
+                <td>{{ complaint.processor.real_name if complaint.processor else '未处理' }}</td>
+                <td>{{ complaint.processed_date.strftime('%Y-%m-%d %H:%M:%S') if complaint.processed_date else '未处理' }}</td>
+                <td>
+                    <a href="{{ url_for('after_sales.edit_complaint', complaint_id=complaint.complaint_id) }}">编辑</a>
+                    <a href="{{ url_for('after_sales.complaint_detail', complaint_id=complaint.complaint_id) }}">详情</a>
+                    <form action="{{ url_for('after_sales.delete_complaint', complaint_id=complaint.complaint_id) }}" method="post" style="display: inline;">
+                        <button type="submit" onclick="return confirm('确定要删除吗？')">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

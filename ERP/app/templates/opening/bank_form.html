@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+  <label for="account_name">账户名称:</label>
+  <input type="text" id="account_name" name="account_name" value="{{ balance.account_name if balance else '' }}" required><br>
+  <label for="bank_name">银行名称:</label>
+  <input type="text" id="bank_name" name="bank_name" value="{{ balance.bank_name if balance else '' }}" required><br>
+  <label for="account_number">账户号码:</label>
+  <input type="text" id="account_number" name="account_number" value="{{ balance.account_number if balance else '' }}" required><br>
+  <label for="balance">余额:</label>
+  <input type="number" id="balance" name="balance" step="0.01" value="{{ balance.balance if balance else 0.00 }}" required><br>
+  <label for="opening_date">期初日期:</label>
+  <input type="date" id="opening_date" name="opening_date" value="{{ balance.opening_date if balance else '' }}" required><br>
+  <label for="description">描述:</label>
+  <textarea id="description" name="description" rows="3">{{ balance.description if balance else '' }}</textarea><br>
+  <button type="submit">保存</button>
+  <a href="{{ url_for('opening.bank_opening') }}">取消</a>
+</form>
+{% endblock %}

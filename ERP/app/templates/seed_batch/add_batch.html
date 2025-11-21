@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-title">添加种子批次</div>
+  </div>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="product_id">产品名称</label>
+            <select class="form-control" id="product_id" name="product_id" required>
+                {% for product in products %}
+                <option value="{{ product.product_id }}">{{ product.product_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="batch_number">批次号</label>
+            <input type="text" class="form-control" id="batch_number" name="batch_number" required>
+        </div>
+        <div class="form-group">
+            <label for="production_date">生产日期</label>
+            <input type="date" class="form-control" id="production_date" name="production_date" required>
+        </div>
+        <div class="form-group">
+            <label for="shelf_life">保质期(天)</label>
+            <input type="number" class="form-control" id="shelf_life" name="shelf_life" required>
+        </div>
+        <div class="form-group">
+            <label for="storage_conditions">储存条件</label>
+            <textarea class="form-control" id="storage_conditions" name="storage_conditions" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('seed_batch.index') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

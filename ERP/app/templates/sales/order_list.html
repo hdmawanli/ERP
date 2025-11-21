@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}销售订单列表{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-title">销售订单列表</div>
+</div>
+
+<!-- 查询表单 -->
+<form class="query-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="order_no">订单号</label>
+            <input type="text" id="order_no" name="order_no" placeholder="输入订单号" value="{{ order_no or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="customer_name">客户</label>
+            <input type="text" id="customer_name" name="customer_name" placeholder="输入客户名称" value="{{ customer_name or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="status">状态</label>
+            <select id="status" name="status">
+                <option value="">所有状态</option>
+                <option value="0" {% if status == '0' %}selected{% endif %}>草稿</option>
+                <option value="1" {% if status == '1' %}selected{% endif %}>已审核</option>
+                <option value="2" {% if status == '2' %}selected{% endif %}>已出库</option>
+                <option value="3" {% if status == '3' %}selected{% endif %}>已取消</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <a href="{{ url_for('sales.index') }}" class="btn btn-secondary">重置</a>
+        <a href="{{ url_for('sales.add_sale_order') }}" class="btn btn-success">添加销售订单</a>
+    </div>
+</form>
+
+<!-- 数据表格 -->
+<table class="data-table">
+  <thead>
+    <tr>
+        <th>ID</th>
+        <th>客户</th>
+        <th>订单号</th>
+        <th>总额</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in orders %}
+    <tr>
+      <td>{{ o.order_id }}</td>
+      <td>{{ o.customer.customer_name if o.customer else o.customer_id }}</td>
+      <td>{{ o.order_no }}</td>
+      <td>{{ o.total_amount }}</td>
+      <td>
+          {% if o.status == 0 %}草稿{% endif %}
+          {% if o.status == 1 %}已审核{% endif %}
+          {% if o.status == 2 %}已出库{% endif %}
+          {% if o.status == 3 %}已取消{% endif %}
+      </td>
+      <td>
+          <a href="{{ url_for('sales.order_detail', order_id=o.order_id) }}" class="btn btn-sm btn-info">详情</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty-row">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

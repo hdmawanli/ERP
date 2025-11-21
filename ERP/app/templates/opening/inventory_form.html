@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.item_code.label(class="form-label") }}
+        {{ form.item_code(class="form-control", autocomplete="off") }}
+        {% if form.item_code.errors %}
+            {% for error in form.item_code.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.item_name.label(class="form-label") }}
+        {{ form.item_name(class="form-control", autocomplete="off") }}
+        {% if form.item_name.errors %}
+            {% for error in form.item_name.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.spec.label(class="form-label") }}
+        {{ form.spec(class="form-control", autocomplete="off") }}
+        {% if form.spec.errors %}
+            {% for error in form.spec.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.unit.label(class="form-label") }}
+        {{ form.unit(class="form-control", autocomplete="off") }}
+        {% if form.unit.errors %}
+            {% for error in form.unit.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.quantity.label(class="form-label") }}
+        {{ form.quantity(class="form-control", step="0.0001") }}
+        {% if form.quantity.errors %}
+            {% for error in form.quantity.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.unit_cost.label(class="form-label") }}
+        {{ form.unit_cost(class="form-control", step="0.01") }}
+        {% if form.unit_cost.errors %}
+            {% for error in form.unit_cost.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.opening_date.label(class="form-label") }}
+        {{ form.opening_date(class="form-control") }}
+        {% if form.opening_date.errors %}
+            {% for error in form.opening_date.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control", rows="3") }}
+        {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}

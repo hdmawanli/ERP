@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}应收收款列表{% endblock %}
+{% block content %}
+<h2>应收收款记录</h2>
+<a href="{{ url_for('arap.add_ar_payment') }}">添加收款</a>
+<table>
+  <thead><tr><th>ID</th><th>关联发票</th><th>客户</th><th>金额</th><th>日期</th></tr></thead>
+  <tbody>
+    {% for p in payments %}
+    <tr>
+      <td>{{ p.receipt_id }}</td>
+      <td>{{ p.receivable_id }}</td>
+      <td>{{ p.customer_id }}</td>
+      <td>{{ p.amount }}</td>
+      <td>{{ p.receipt_date }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}会计科目列表{% endblock %}
+{% block content %}
+<h2>会计科目列表</h2>
+<a href="{{ url_for('expense.add_subject') }}">添加会计科目</a><br><br>
+<table>
+  <thead><tr><th>ID</th><th>科目编码</th><th>科目名称</th><th>科目类型</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for subject in subjects %}
+    <tr>
+      <td>{{ subject.subject_id }}</td>
+      <td>{{ subject.subject_code }}</td>
+      <td>{{ subject.subject_name }}</td>
+      <td>{{ subject.subject_type }}</td>
+      <td>{{ '启用' if subject.status == 1 else '禁用' }}</td>
+      <td>
+        <a href="{{ url_for('expense.edit_subject', subject_id=subject.subject_id) }}">编辑</a>
+        <a href="{{ url_for('expense.delete_subject', subject_id=subject.subject_id) }}">删除</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

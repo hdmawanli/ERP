@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>编辑客户反馈</h2>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="customer_id">客户名称</label>
+            <select class="form-control" id="customer_id" name="customer_id" required>
+                <option value="">请选择客户</option>
+                {% for customer in customers %}
+                <option value="{{ customer.customer_id }}" {% if customer.customer_id == feedback.customer_id %}selected{% endif %}>{{ customer.company_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="product_id">产品名称</label>
+            <select class="form-control" id="product_id" name="product_id">
+                <option value="">无</option>
+                {% for product in products %}
+                <option value="{{ product.product_id }}" {% if product.product_id == feedback.product_id %}selected{% endif %}>{{ product.product_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="feedback_type">反馈类型</label>
+            <input type="text" class="form-control" id="feedback_type" name="feedback_type" value="{{ feedback.feedback_type }}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">反馈内容</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required>{{ feedback.content }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="status">状态</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="1" {% if feedback.status == 1 %}selected{% endif %}>待处理</option>
+                <option value="2" {% if feedback.status == 2 %}selected{% endif %}>处理中</option>
+                <option value="3" {% if feedback.status == 3 %}selected{% endif %}>已解决</option>
+                <option value="4" {% if feedback.status == 4 %}selected{% endif %}>已关闭</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('after_sales.feedback_list') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

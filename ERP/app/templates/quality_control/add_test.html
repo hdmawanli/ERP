@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>添加质量检测记录</h2>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="batch_id">批次号</label>
+            <select class="form-control" id="batch_id" name="batch_id" required>
+                {% for batch in batches %}
+                <option value="{{ batch.batch_id }}">{{ batch.batch_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="test_type">检测类型</label>
+            <input type="text" class="form-control" id="test_type" name="test_type" placeholder="如：常规检测、抽样检测" required>
+        </div>
+        <div class="form-group">
+            <label for="operator">操作人</label>
+            <input type="text" class="form-control" id="operator" name="operator" required>
+        </div>
+
+        <div class="form-group">
+            <label>检测项目</label>
+            <div id="test_items_container">
+                {% for item in default_test_items %}
+                <div class="row mb-3 test-item-row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="test_item_name[]" value="{{ item.name }}" placeholder="检测项目名称" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="test_value[]" placeholder="检测值" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="unit[]" value="{{ item.unit }}" placeholder="单位" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="standard_value[]" value="{{ item.standard }}" placeholder="标准值" required>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" class="form-check-input" name="is_qualified[]" checked>
+                        <label class="form-check-label">合格</label>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger remove-item">删除</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-item">添加检测项目</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('quality_control.index') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+
+<script>
+    // 添加新检测项目行
+    document.getElementById('add-item').addEventListener('click', function() {
+        const container = document.getElementById('test_items_container');
+        const newRow = document.createElement('div');
+        newRow.className = 'row mb-3 test-item-row';
+        newRow.innerHTML = `
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="test_item_name[]" placeholder="检测项目名称" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="test_value[]" placeholder="检测值" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="unit[]" placeholder="单位" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="standard_value[]" placeholder="标准值" required>
+            </div>
+            <div class="col-md-1">
+                <input type="checkbox" class="form-check-input" name="is_qualified[]" checked>
+                <label class="form-check-label">合格</label>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger remove-item">删除</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+        // 为新添加的删除按钮添加事件监听
+        newRow.querySelector('.remove-item').addEventListener('click', function() {
+            newRow.remove();
+        });
+    });
+
+    // 删除检测项目行
+    document.addEventListener('DOMContentLoaded', function() {
+        const removeButtons = document.querySelectorAll('.remove-item');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.test-item-row').remove();
+            });
+        });
+    });
+</script>
+{% endblock %}

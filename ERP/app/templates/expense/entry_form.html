@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+  <label for="entry_date">日期:</label>
+  <input type="date" id="entry_date" name="entry_date" value="{{ entry.entry_date if entry else '' }}" required><br>
+  <label for="type_id">费用类型:</label>
+  <select id="type_id" name="type_id" required>
+    {% for type in expense_types %}
+    <option value="{{ type.type_id }}" {% if entry and entry.type_id == type.type_id %}selected{% endif %}>{{ type.type_name }}</option>
+    {% endfor %}
+  </select><br>
+  <label for="subject_id">会计科目:</label>
+  <select id="subject_id" name="subject_id" required>
+    {% for subject in accounting_subjects %}
+    <option value="{{ subject.subject_id }}">{{ subject.subject_name }}</option>
+    {% endfor %}
+  </select><br>
+  <label for="amount">金额:</label>
+  <input type="number" id="amount" name="amount" step="0.01" value="{{ entry.amount if entry else '' }}" required><br>
+  <label for="description">描述:</label>
+  <textarea id="description" name="description" rows="3">{{ entry.description if entry else '' }}</textarea><br>
+  <label for="department_id">部门:</label>
+  <input type="number" id="department_id" name="department_id" value="{{ entry.department_id if entry else '' }}" required><br>
+  <button type="submit">保存</button>
+  <a href="{{ url_for('expense.entries') }}">取消</a>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}费用分摊列表{% endblock %}
+{% block content %}
+<h2>费用分摊列表</h2>
+<table>
+  <thead><tr><th>ID</th><th>费用记录</th><th>分摊日期</th><th>成本中心</th><th>分摊金额</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for allocation in allocations %}
+    <tr>
+      <td>{{ allocation.allocation_id }}</td>
+      <td>{{ allocation.entry.description }}</td>
+      <td>{{ allocation.allocation_date }}</td>
+      <td>{{ allocation.cost_center }}</td>
+      <td>{{ allocation.allocated_amount }}</td>
+      <td>
+        <a href="#">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('expense.add_allocation') }}">添加费用分摊</a>
+{% endblock %}

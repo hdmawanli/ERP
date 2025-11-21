@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}质量检测列表{% endblock %}
+{% block content %}
+<h2>质量检测列表</h2>
+<a href="{{ url_for('quality_control.add_test') }}">添加新检测</a><br><br>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>批次号</th>
+      <th>检测类型</th>
+      <th>操作人</th>
+      <th>检测时间</th>
+      <th>整体结果</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for test in tests %}
+    <tr>
+      <td>{{ test.test_id }}</td>
+      <td>{{ test.seed_batch.batch_number }}</td>
+      <td>{{ test.test_type }}</td>
+      <td>{{ test.operator }}</td>
+      <td>{{ test.test_date.strftime('%Y-%m-%d') }}</td>
+      <td>
+        {% if test.overall_result == '合格' %}
+        <span style="color: green;">{{ test.overall_result }}</span>
+        {% else %}
+        <span style="color: red;">{{ test.overall_result }}</span>
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('quality_control.edit_test', test_id=test.test_id) }}">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

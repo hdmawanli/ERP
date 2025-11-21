@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}种子批次详情{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="page-title">种子批次详情</div>
+  </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">批次信息</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">批次号</dt>
+                        <dd class="col-sm-8">{{ batch.batch_number }}</dd>
+                        <dt class="col-sm-4">产品名称</dt>
+                        <dd class="col-sm-8">{{ batch.product.product_name }}</dd>
+                        <dt class="col-sm-4">生产日期</dt>
+                        <dd class="col-sm-8">{{ batch.production_date.strftime('%Y-%m-%d') }}</dd>
+                        <dt class="col-sm-4">保质期</dt>
+                        <dd class="col-sm-8">{{ batch.shelf_life }}天</dd>
+                        <dt class="col-sm-4">到期日期</dt>
+                        <dd class="col-sm-8">{{ batch.expiration_date.strftime('%Y-%m-%d') }}</dd>
+                        <dt class="col-sm-4">储存条件</dt>
+                        <dd class="col-sm-8">{{ batch.storage_conditions }}</dd>
+                        <dt class="col-sm-4">状态</dt>
+                        <dd class="col-sm-8">
+                            {% if batch.status == 1 %}
+                            <span class="badge badge-success">正常</span>
+                            {% elif batch.status == 2 %}
+                            <span class="badge badge-warning">即将过期</span>
+                            {% elif batch.status == 3 %}
+                            <span class="badge badge-danger">已过期</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                    <a href="{{ url_for('seed_batch.index') }}" class="btn btn-primary">返回列表</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h5>溯源记录</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>溯源类型</th>
+                        <th>内容</th>
+                        <th>操作人</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trace in traces %}
+                    <tr>
+                        <td>{{ trace.trace_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ trace.trace_type }}</td>
+                        <td>{{ trace.trace_content }}</td>
+                        <td>{{ trace.operator }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4">没有溯源记录</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

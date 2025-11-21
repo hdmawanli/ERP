@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}客户反馈列表{% endblock %}
+{% block content %}
+<h2>客户反馈列表</h2>
+<a href="{{ url_for('after_sales.add_feedback') }}">添加新反馈</a><br><br>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>客户名称</th>
+      <th>产品名称</th>
+      <th>反馈类型</th>
+      <th>内容</th>
+      <th>状态</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for feedback in feedbacks %}
+    <tr>
+      <td>{{ feedback.feedback_id }}</td>
+      <td>{{ feedback.customer.company_name if feedback.customer else '未知' }}</td>
+      <td>{{ feedback.product.product_name if feedback.product else '无' }}</td>
+      <td>{{ feedback.feedback_type }}</td>
+      <td>{{ feedback.content[:50] }}{% if feedback.content|length > 50 %}...{% endif %}</td>
+      <td>
+        {% if feedback.status == 1 %}
+        <span style="color: blue;">待处理</span>
+        {% elif feedback.status == 2 %}
+        <span style="color: orange;">处理中</span>
+        {% elif feedback.status == 3 %}
+        <span style="color: green;">已解决</span>
+        {% elif feedback.status == 4 %}
+        <span style="color: red;">已关闭</span>
+        {% endif %}
+      </td>
+      <td>{{ feedback.create_time.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>
+        <a href="{{ url_for('after_sales.edit_feedback', feedback_id=feedback.feedback_id) }}">编辑</a> |
+        <form method="POST" action="{{ url_for('after_sales.delete_feedback', feedback_id=feedback.feedback_id) }}" style="display: inline;">
+          <input type="submit" value="删除" onclick="return confirm('确定要删除这个反馈吗？')">
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

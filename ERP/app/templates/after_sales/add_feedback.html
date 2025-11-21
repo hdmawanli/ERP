@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>添加客户反馈</h2>
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="customer_id">客户名称</label>
+            <select class="form-control" id="customer_id" name="customer_id" required>
+                <option value="">请选择客户</option>
+                {% for customer in customers %}
+                <option value="{{ customer.customer_id }}">{{ customer.company_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="product_id">产品名称</label>
+            <select class="form-control" id="product_id" name="product_id">
+                <option value="">无</option>
+                {% for product in products %}
+                <option value="{{ product.product_id }}">{{ product.product_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="feedback_type">反馈类型</label>
+            <input type="text" class="form-control" id="feedback_type" name="feedback_type" placeholder="如：质量问题、使用咨询" required>
+        </div>
+        <div class="form-group">
+            <label for="content">反馈内容</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('after_sales.feedback_list') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

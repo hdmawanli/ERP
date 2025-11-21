@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>库存期初余额列表</title>
+    <style>
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .btn-edit {
+            background-color: #28a745;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>库存期初余额列表</h1>
+    
+    <div class="nav-menu">
+        <a href="{{ url_for('opening.index') }}" class="nav-button">期初管理首页</a>
+        <a href="{{ url_for('opening.bank_opening') }}" class="nav-button">银行期初余额</a>
+        <a href="{{ url_for('opening.ar_opening') }}" class="nav-button">应收期初余额</a>
+        <a href="{{ url_for('opening.ap_opening') }}" class="nav-button">应付期初余额</a>
+        <a href="{{ url_for('opening.inventory_opening') }}" class="nav-button">库存期初余额</a>
+        <a href="{{ url_for('opening.add_inventory_opening') }}" class="nav-button">添加库存期初余额</a>
+    </div>
+    
+    <h2>库存期初余额列表</h2>
+    <a href="{{ url_for('opening.add_inventory_opening') }}">添加库存期初余额</a><br><br>
+    <form method="get" class="filter-form">
+        <input type="text" name="search" placeholder="搜索商品名称或编码" value="{{ search_query }}">
+        <button type="submit">搜索</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>商品编码</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>单位</th>
+                <th>数量</th>
+                <th>单位成本</th>
+                <th>金额</th>
+                <th>期初日期</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if balances %}
+                {% for balance in balances %}
+                    <tr>
+                        <td>{{ balance.balance_id }}</td>
+                        <td>{{ balance.item_code }}</td>
+                        <td>{{ balance.item_name }}</td>
+                        <td>{{ balance.spec or '' }}</td>
+                        <td>{{ balance.unit }}</td>
+                        <td>{{ balance.quantity }}</td>
+                        <td>{{ balance.unit_cost }}</td>
+                        <td>{{ balance.amount }}</td>
+                        <td>{{ balance.opening_date }}</td>
+                        <td>{{ balance.description or '' }}</td>
+                        <td>
+                            <a href="{{ url_for('opening.edit_inventory_opening', balance_id=balance.balance_id) }}" class="btn btn-edit">编辑</a>
+                            <!-- 这里可以添加删除按钮，需要确认是否需要删除功能 -->
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="11">没有记录</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>

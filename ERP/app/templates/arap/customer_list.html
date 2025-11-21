@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}客户列表{% endblock %}
+{% block content %}
+<h2>客户列表</h2>
+<a href="{{ url_for('arap.add_customer') }}">添加客户</a>
+<table>
+  <thead><tr><th>ID</th><th>代码</th><th>名称</th><th>电话</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for c in customers %}
+    <tr>
+      <td>{{ c.customer_id }}</td>
+      <td>{{ c.customer_code }}</td>
+      <td>{{ c.customer_name }}</td>
+      <td>{{ c.phone }}</td>
+      <td><a href="{{ url_for('arap.edit_customer', customer_id=c.customer_id) }}">编辑</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+  <div>
+    <label for="subject_code">科目编码:</label>
+    <input type="text" id="subject_code" name="subject_code" value="{{ subject.subject_code if subject else '' }}" required>
+  </div>
+  <div>
+    <label for="subject_name">科目名称:</label>
+    <input type="text" id="subject_name" name="subject_name" value="{{ subject.subject_name if subject else '' }}" required>
+  </div>
+  <div>
+    <label for="subject_type">科目类型:</label>
+    <select id="subject_type" name="subject_type" required>
+      <option value="资产" {% if subject and subject.subject_type == '资产' %}selected{% endif %}>资产</option>
+      <option value="负债" {% if subject and subject.subject_type == '负债' %}selected{% endif %}>负债</option>
+      <option value="权益" {% if subject and subject.subject_type == '权益' %}selected{% endif %}>权益</option>
+      <option value="成本" {% if subject and subject.subject_type == '成本' %}selected{% endif %}>成本</option>
+      <option value="损益" {% if subject and subject.subject_type == '损益' %}selected{% endif %}>损益</option>
+    </select>
+  </div>
+  <div>
+    <input type="submit" value="保存">
+  </div>
+</form>
+{% endblock %}

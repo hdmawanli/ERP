@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}应付付款列表{% endblock %}
+{% block content %}
+<h2>应付付款记录</h2>
+<a href="{{ url_for('arap.add_ap_payment') }}">添加付款</a>
+<table>
+  <thead><tr><th>ID</th><th>关联发票</th><th>供应商</th><th>金额</th><th>日期</th></tr></thead>
+  <tbody>
+    {% for p in payments %}
+    <tr>
+      <td>{{ p.payment_id }}</td>
+      <td>{{ p.payable_id }}</td>
+      <td>{{ p.supplier_id }}</td>
+      <td>{{ p.amount }}</td>
+      <td>{{ p.payment_date }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}应收发票列表{% endblock %}
+{% block content %}
+<h2>应收发票列表</h2>
+<a href="{{ url_for('arap.add_ar_invoice') }}">添加应收发票</a>
+<table>
+  <thead>
+    <tr><th>ID</th><th>客户</th><th>金额</th><th>余额</th><th>到期日</th><th>操作</th></tr>
+  </thead>
+  <tbody>
+    {% for inv in invoices %}
+    <tr>
+      <td>{{ inv.receivable_id }}</td>
+      <td>{{ inv.customer_id }}</td>
+      <td>{{ inv.amount }}</td>
+      <td>{{ inv.balance }}</td>
+      <td>{{ inv.due_date }}</td>
+      <td><a href="{{ url_for('arap.ar_payments') }}">收款</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

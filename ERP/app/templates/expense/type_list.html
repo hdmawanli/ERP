@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}费用类型列表{% endblock %}
+{% block content %}
+<h2>费用类型列表</h2>
+<table>
+  <thead><tr><th>ID</th><th>类型名称</th><th>描述</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for type in expense_types %}
+    <tr>
+      <td>{{ type.type_id }}</td>
+      <td>{{ type.type_name }}</td>
+      <td>{{ type.description }}</td>
+      <td>{{ '启用' if type.status == 1 else '禁用' }}</td>
+      <td>
+        <a href="{{ url_for('expense.edit_type', type_id=type.type_id) }}">编辑</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">没有记录</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('expense.add_type') }}">添加费用类型</a>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">
+  <div class="form-group">
+    <label for="supplier_id">供应商:</label>
+    <select id="supplier_id" name="supplier_id" class="form-control" required>
+      {% for supplier in suppliers %}
+        <option value="{{ supplier.supplier_id }}">{{ supplier.supplier_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="order_no">订单号:</label>
+    <input type="text" id="order_no" name="order_no" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="order_date">订单日期:</label>
+    <input type="date" id="order_date" name="order_date" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="expected_date">预计到货日期:</label>
+    <input type="date" id="expected_date" name="expected_date" class="form-control" required>
+  </div>
+  
+  <h3>采购明细</h3>
+  <div id="items-list">
+    <!-- 商品列表，这里可以添加动态添加行的JavaScript -->
+    <div class="item-row">
+      <div class="form-group">
+        <label for="item_id_0">原材料:</label>
+        <select id="item_id_0" name="item_id[]" class="form-control item-select" required>
+          {% for material in raw_materials %}
+            <option value="{{ material.material_id }}">{{ material.material_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="quantity_0">数量:</label>
+        <input type="number" id="quantity_0" name="quantity[]" class="form-control quantity" step="0.01" min="0" required>
+      </div>
+      <div class="form-group">
+        <label for="unit_price_0">单价:</label>
+        <input type="number" id="unit_price_0" name="unit_price[]" class="form-control unit-price" step="0.01" min="0" required>
+      </div>
+      <button type="button" class="btn btn-danger remove-item">移除</button>
+    </div>
+  </div>
+  <button type="button" id="add-item" class="btn btn-success">添加商品</button>
+  <br><br>
+  
+  <button type="submit" class="btn btn-primary">提交</button>
+  <a href="{{ url_for('purchase.index') }}" class="btn btn-secondary">取消</a>
+</form>
+
+<script>
+// 简单的动态添加/移除商品行的JavaScript
+let rowCount = 1;
+
+document.getElementById('add-item').addEventListener('click', function() {
+  const itemsList = document.getElementById('items-list');
+  const newRow = document.createElement('div');
+  newRow.className = 'item-row';
+  newRow.innerHTML = `
+    <div class="form-group">
+      <label for="item_id_${rowCount}">原材料:</label>
+      <select id="item_id_${rowCount}" name="item_id[]" class="form-control item-select" required>
+        {% for material in raw_materials %}
+          <option value="{{ material.material_id }}">{{ material.material_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="quantity_${rowCount}">数量:</label>
+      <input type="number" id="quantity_${rowCount}" name="quantity[]" class="form-control quantity" step="0.01" min="0" required>
+    </div>
+    <div class="form-group">
+      <label for="unit_price_${rowCount}">单价:</label>
+      <input type="number" id="unit_price_${rowCount}" name="unit_price[]" class="form-control unit-price" step="0.01" min="0" required>
+    </div>
+    <button type="button" class="btn btn-danger remove-item">移除</button>
+  `;
+  itemsList.appendChild(newRow);
+  rowCount++;
+});
+
+document.body.addEventListener('click', function(e) {
+  if (e.target.classList.contains('remove-item')) {
+    const row = e.target.parentElement;
+    const rows = document.querySelectorAll('.item-row');
+    if (rows.length > 1) {
+      row.remove();
+    }
+  }
+});
+</script>
+{% endblock %}
